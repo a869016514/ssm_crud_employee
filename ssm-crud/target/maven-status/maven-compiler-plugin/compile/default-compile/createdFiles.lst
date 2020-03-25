@@ -1,0 +1,17 @@
+cn\huahua\test\MBGTest.class
+cn\huahua\controller\EmployeeController.class
+cn\huahua\service\EmployeeService.class
+cn\huahua\bean\DepartmentExample$GeneratedCriteria.class
+cn\huahua\bean\DepartmentExample$Criteria.class
+cn\huahua\bean\DepartmentExample$Criterion.class
+cn\huahua\test\MVCTest.class
+cn\huahua\bean\Department.class
+cn\huahua\bean\EmployeeExample$Criterion.class
+cn\huahua\bean\EmployeeExample.class
+cn\huahua\dao\DepartmentMapper.class
+cn\huahua\test\MapperTest.class
+cn\huahua\bean\Employee.class
+cn\huahua\bean\DepartmentExample.class
+cn\huahua\dao\EmployeeMapper.class
+cn\huahua\bean\EmployeeExample$Criteria.class
+cn\huahua\bean\EmployeeExample$GeneratedCriteria.class
