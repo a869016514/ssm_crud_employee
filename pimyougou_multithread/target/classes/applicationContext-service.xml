@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 扫描除controller外的文件 -->
+	<context:component-scan base-package="qianggou">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	 	<context:property-placeholder   location="classpath:config/*.properties"/>
+	 <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+ 
+     <!--mybatis整合  -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定mybatis全局配置文件 -->
+   <!--      <property name="configLocation" value="classpath:mybatis-config.xml"></property> -->
+        <property name="dataSource" ref="dataSource"/>
+        <!--指定mybatis mapper文件的位置  -->
+<!-- 		<property name="mapperLocations" value="classpath:qianggou/mapper/*.xml"></property> -->
+        <property name="typeAliasesPackage" value="qianggou.bean"/>
+    </bean>
+    <!--配置扫描器 将mybatis接口的实现加入ioc容器中 --> 
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<!-- 扫描所有的dao接口的实现  加入到ioc容器 -->
+        <property name="basePackage" value="qianggou.mapper"/>
+    </bean> 
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven/>
+	<bean id="idWorker" class="qianggou.utils.IdWorker">
+		<constructor-arg index="0" value="0"></constructor-arg>
+		<constructor-arg index="1" value="0"></constructor-arg>
+	</bean>
+	
+	<bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" id="executor">
+    <!-- 核心线程数，默认为1-->
+    <property name="corePoolSize" value="10" />
+    <!--最大线程数，默认为Integer.MAX_VALUE-->
+    <property name="maxPoolSize" value="50" />
+    <!--队列最大长度，一般需要设置值>=notifyScheduledMainExecutor.maxNum；默认为Integer.MAX_VALUE-->
+    <property name="queueCapacity" value="10000" />
+    <!--线程池维护线程所允许的空闲时间，默认为60s-->
+    <property name="keepAliveSeconds" value="300" />
+    <!--线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者-->
+    <property name="rejectedExecutionHandler">
+        <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+    </property>
+	</bean>
+	
+ 
+</beans>
